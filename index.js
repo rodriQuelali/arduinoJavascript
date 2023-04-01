@@ -1,7 +1,20 @@
-const { Board, Led } = require("johnny-five");
-const board = new Board({ port: "COM3" });
-board.on("ready", () => {
-    console.log("Arduino listo");
-    const led = new Led(13);
-    led.blink(500);
+
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('hola segundo B')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+
+var five = require("johnny-five");
+var board = new five.Board();
+
+board.on("ready", ()=> {
+  var led = new five.Led(13);
+  led.blink(1000);
 });
