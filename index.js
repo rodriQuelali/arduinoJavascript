@@ -1,20 +1,29 @@
 
 const express = require('express')
 const app = express()
-const port = 3000
+const io = require('socket.io')(app.listen(3000));
+//const port = 3000
+
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  res.send('hola segundo B')
+  res.sendFile(__dirname + '/public/index.html')
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+app.listen(() => console.log(`Example app listening on port 3000`))
 
 var five = require("johnny-five");
 var board = new five.Board();
 
 board.on("ready", ()=> {
   var led = new five.Led(13);
-  led.blink(1000);
+  //conexion con SOCKET
+  io.on('connection', (socket)=>{
+    socket.on('onLed', ()=>{
+      led.on();
+    })
+    socket.on('onOff', ()=>{
+      led.off();
+    })
+  })
 });
